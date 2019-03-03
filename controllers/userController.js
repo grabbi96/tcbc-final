@@ -11,14 +11,6 @@ const varificationTemplate = require("../emailTemplate/verificationTemplate");
 
 const sendGridTransport = require("nodemailer-sendgrid-transport");
 
-const transporter = nodemailer.createTransport(
-  sendGridTransport({
-    auth: {
-      api_key:
-        "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"
-    }
-  })
-);
 module.exports = {
   async register(req, res) {
     const { name, email, password, confirmPassword } = req.body;
