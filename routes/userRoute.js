@@ -3,15 +3,17 @@ const {
   register,
   activateAccount,
   getAllUsers,
-  mailTesting
+  mailTesting,
+  login
 } = require("../controllers/userController");
 
-router.post("/", register);
+router.post("/register", register);
 
 router.get("/activateaccount/:token", activateAccount);
 
 router.get("/all", getAllUsers);
 
 router.get("/mailcheaking", mailTesting);
+router.post("/login", login);
 
 module.exports = router;

@@ -19,10 +19,9 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server is on fire${PORT}`);
   mongoose
-    .connect(
-      "mongodb://localhost:27017/mern-project",
-      { useNewUrlParser: true }
-    )
+    .connect("mongodb://localhost:27017/mern-project", {
+      useNewUrlParser: true
+    })
     .then(() => {
       console.log("mongobd connected successfully");
     });

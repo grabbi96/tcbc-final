@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const registrationValidator = require("../validator/registrationValidator");
+const validateLoginInput = require("../validator/loginValidator");
 const { catchError } = require("../utils/error");
 const { PENDING, ACTIVE } = require("../utils/accountStatus");
 const nodemailer = require("nodemailer");
@@ -14,29 +15,28 @@ const transporter = nodemailer.createTransport(
   sendGridTransport({
     auth: {
       api_key:
-        "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"
+        "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"
     }
   })
 );
 module.exports = {
   async register(req, res) {
     const { name, email, password, confirmPassword } = req.body;
-    const validResult = registrationValidator({
+    const { errors, isValid } = registrationValidator({
       name,
       email,
       password,
       confirmPassword
     });
 
-    if (!validResult.isValid) {
-      res.json(validResult.errors);
+    if (!isValid) {
+      return res.status(400).json(errors);
     } else {
       try {
         const findUser = await User.findOne({ email });
         if (findUser) {
-          return res.status(400).json({
-            message: "Email Already exits"
-          });
+          errors.email = "Email Already exits";
+          return res.status(400).json(errors);
         }
         const activeToken = jwt.sign({ name, email }, "SECRET", {
           expiresIn: "1d"
@@ -83,6 +83,43 @@ module.exports = {
       } catch (error) {
         return catchError(res, error);
       }
+    }
+  },
+  async login(req, res) {
+    const { errors, isValid } = validateLoginInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const findUser = await User.findOne({ email: email });
+
+    if (!findUser) {
+      errors.email = "email don't found";
+      return res.status(400).json(errors);
+    }
+
+    const checkPassword = await bcrypt.compare(password, findUser.password);
+
+    if (checkPassword) {
+      let payload = {
+        id: findUser._id,
+        name: findUser.name,
+        email: findUser.email
+      };
+      let token = jwt.sign(payload, "SECRET", { expiresIn: "1h" });
+
+      res.json({
+        message: "login successfully",
+        token: "Bearer " + token
+      });
+    } else {
+      errors.password = " password incorrect";
+      return res.status(400).json(errors);
     }
   },
   async activateAccount(req, res) {
