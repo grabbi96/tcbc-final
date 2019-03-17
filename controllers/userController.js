@@ -103,7 +103,7 @@ module.exports = {
         name: findUser.name,
         email: findUser.email
       };
-      let token = jwt.sign(payload, "SECRET", { expiresIn: "1h" });
+      let token = jwt.sign(payload, process.env.SECRET, { expiresIn: "1h" });
 
       res.json({
         message: "login successfully",
@@ -175,5 +175,59 @@ module.exports = {
     } catch (err) {
       console.log(err);
     }
+  },
+  async passwordResetEmailChecking(req, res) {
+    let email = req.body.email;
+    console.log(req.body);
+    let randomNumber = Math.floor(Math.random() * 899999 + 100000);
+    const user = await User.findOne({ email: email });
+    try {
+      if (!user) {
+        return res.status(400).json({
+          message: "email didn'd found",
+          error: {
+            forgotpassEmail: "email didt found"
+          }
+        });
+      }
+
+      const resetTokenUser = await User.findOneAndUpdate(
+        { email },
+        {
+          $set: {
+            resetPasswordToken: randomNumber
+          }
+        }
+      );
+      res.status(200).json({
+        message: "Account found",
+        user: {
+          _id: resetTokenUser._id,
+          email: resetTokenUser.email
+        }
+      });
+    } catch (err) {
+      return catchError(res, err);
+    }
+  },
+  async passwordResetTokenMatching(req, res) {
+    let { email, token } = req.body;
+
+    const user = await User.findOne({ email: email });
+
+    console.log(typeof user.resetPasswordToken, typeof token);
+    if (Number(token) !== Number(user.resetPasswordToken)) {
+      console.log(Number(token), Number(user.resetPasswordToken));
+      return res.status(400).json({
+        message: "token didn'd found",
+        error: {
+          token: "token didt found"
+        }
+      });
+    }
+
+    return res.status(200).json({
+      message: "token validated"
+    });
   }
 };

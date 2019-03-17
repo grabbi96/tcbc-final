@@ -3,7 +3,7 @@ import { Form, Row, Col, Button, Alert } from "reactstrap";
 import TextInput from "../components/Forms/TextInput";
 import registerValidator from "../validator/registerValidator";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { login } from "../store/actions/authAction";
 class Login extends Component {
   state = {
@@ -28,7 +28,7 @@ class Login extends Component {
 
   submitHandler = event => {
     event.preventDefault();
-    let { name, email, password, confirmPassword } = this.state;
+    let { email, password } = this.state;
     let user = {
       email: email.value,
       password: password.value
@@ -71,6 +71,7 @@ class Login extends Component {
             <Button color="primary" type="submit" onSubmit={this.submitHandler}>
               Login
             </Button>
+            <Link to="/forgot-password"> Forgot password </Link>
           </Form>
           {Object.keys(error).length > 0 && (
             <Alert className="my-4" color="danger">

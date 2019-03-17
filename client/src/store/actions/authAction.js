@@ -1,4 +1,4 @@
-import { SET_USER } from "./types";
+import { SET_USER, SET_RESET_PASSWORD_USER } from "./types";
 import Axios from "axios";
 import { setError } from "./errorAction";
 import { setLoading, setToastMessage } from "./metaAction";
@@ -63,6 +63,25 @@ export const logout = history => dispatch => {
   localStorage.removeItem("auth_token");
   history.push("/login");
 };
+
+export const forgotPassword = (userEmail, history) => dispatch => {
+  Axios.post("/api/users/forgot-password", userEmail)
+    .then(user => {
+      dispatch({
+        type: SET_RESET_PASSWORD_USER,
+        payload: { resetUser: user.data.user }
+      });
+      history.push("check-reset-password-token");
+    })
+    .catch(err => {
+      dispatch(setError(err.response.data.error));
+    });
+};
+
+export const token = (userToken, history) => dispatch => {
+  Axios.post("api/users/");
+};
+
 export const setUser = user => ({
   type: SET_USER,
   payload: { user: user ? user : {} }

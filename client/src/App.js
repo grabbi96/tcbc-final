@@ -8,6 +8,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import RegistrationSuccessFul from "./pages/RegistrationSuccessFul";
 import ActivationPage from "./pages/activationPage";
+import forGotPasswordEmail from "./pages/forgotPasswordEmail";
+import checkResetPasswordToken from "./pages/checkResetPasswordToken";
 class App extends Component {
   render() {
     return (
@@ -23,6 +25,11 @@ class App extends Component {
               component={RegistrationSuccessFul}
             />
             <Route path="/activeaccount/:token" component={ActivationPage} />
+            <Route path="/forgot-password" component={forGotPasswordEmail} />
+            <Route
+              path="/check-reset-password-token"
+              component={checkResetPasswordToken}
+            />
           </Container>
         </div>
       </BrowserRouter>
