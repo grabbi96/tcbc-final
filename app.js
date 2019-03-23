@@ -14,6 +14,12 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 require("./passport/jwStrategy")(passport);
 
+// app.get("/api/quiz", (req, res) => {
+//   console.log("done");
+//   res.status(200).json({
+//     okay: "good"
+//   });
+// });
 app.use("/api/users", userRoute);
 app.use("/api/quiz", require("./routes/quizRoute"));
 app.use("/api/category", require("./routes/categoryRoute"));
@@ -30,3 +36,4 @@ app.listen(PORT, () => {
       console.log("mongobd connected successfully");
     });
 });
+// 1. my status . study abroad 3. quiz test 4. payment

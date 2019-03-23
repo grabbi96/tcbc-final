@@ -31,8 +31,9 @@ module.exports = {
     }
   },
   async all(req, res) {
+    console.log(req.user, ";dfghh");
     try {
-      const Skills = await Category.find();
+      const Skills = await Skill.find();
       if (Skills.length === 0) {
         return res.status(400).json({
           message: "category none"

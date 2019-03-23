@@ -39,7 +39,7 @@ module.exports = ({
     error.author = "author invalid";
   }
 
-  if (!questions.length < 2) {
+  if (questions.length < 2) {
     error.questions = "you must provite a questions";
   } else {
     const questionError = questions.map(ques => {

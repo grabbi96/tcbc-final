@@ -10,7 +10,7 @@ module.exports = ({ question, options, answer }) => {
 
   if (!answer) {
     error.answer = "You Must Provide a valid Answer";
-  } else if (!options.includes(answer)) {
+  } else if (options.includes(answer)) {
     error.answer = "you must provide answer in your options";
   }
   return {

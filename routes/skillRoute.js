@@ -1,9 +1,9 @@
 const router = require("express").Router();
-const passport = require("passport");
+const authenticate = require("../passport/authenticateMiddleware");
 const { createSkill, all } = require("../controllers/skillController");
 
 router.post("/create", createSkill);
 
-router.get("/all", passport.authenticate("jwt", { session: false }), all);
+router.get("/all", authenticate, all);
 
 module.exports = router;

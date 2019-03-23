@@ -10,8 +10,16 @@ module.exports = passport => {
   passport.use(
     new jwtStrategy(opts, async (payload, done) => {
       try {
-        let user = User.findById(payload._id);
-      } catch (error) {}
+        let user = await User.findById(payload.id);
+
+        if (!user) {
+          return done(null, false);
+        } else {
+          return done(null, user);
+        }
+      } catch (error) {
+        return done(error);
+      }
 
       done();
     })
